@@ -14,9 +14,9 @@ export default function Dashboard({ user, profile, log }: any) {
   const [zips, setZips] = useState<string[]>([])
   const [zipInput, setZipInput] = useState('')
   const [filter, setFilter] = useState('all')
-  const [subject, setSubject] = useState('Cash offer inquiry — {address}')
+    const [subject, setSubject] = useState('All-cash offer — {address}')
   const [body, setBody] = useState('Hi {agent_name},\n\nI came across the listing at {address} and wanted to reach out with a cash offer inquiry.\n\nThe property has been listed for {dom} days and I\'m prepared to move quickly with a straightforward all-cash offer.\n\nWould you be open to a brief conversation?\n\nBest regards,\n[Your name]\n[Your phone]')
-  const [apifyKey, setApifyKey] = useState(profile?.apify_api_key || '')
+  const [apifyKey, setApifyKey] = useState(profile?.apify_api_key || '')h
   const [saved, setSaved] = useState(false)
   const [preview, setPreview] = useState(false)
   const router = useRouter()
@@ -33,10 +33,24 @@ export default function Dashboard({ user, profile, log }: any) {
     }
   }
 
-  function fill(s: string, l: any) {
-    return s.replace(/\{address\}/g, l.address).replace(/\{price\}/g, '$' + Number(l.price).toLocaleString()).replace(/\{dom\}/g, l.daysOnZillow).replace(/\{agent_name\}/g, l.agentName)
-  }
+    function getOfferPrice(price: number, dom: number): number {
+          let pct = 0.75
+          if (dom >= 180) pct = 0.64
+          else if (dom >= 120) pct = 0.68
+          else if (dom >= 90) pct = 0.70
+          return Math.round(price * pct)
+    }
 
+    function fill(s: string, l: any) {
+          const offerPrice = getOfferPrice(Number(l.price), Number(l.daysOnZillow))
+          return s
+            .replace(/\{address\}/g, l.address)
+            .replace(/\{price\}/g, '$' + Number(l.price).toLocaleString())
+            .replace(/\{offer_price\}/g, '$' + offerPrice.toLocaleString())
+            .replace(/\{dom\}/g, l.daysOnZillow)
+            .replace(/\{agent_name\}/g, l.agentName)
+    }
+  
   function runScan() {
     if (!zips.length) { alert('Add at least one ZIP code first'); return }
     setScanning(true); setProgress(5)
