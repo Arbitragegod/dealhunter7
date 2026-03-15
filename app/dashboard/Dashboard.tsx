@@ -14,9 +14,9 @@ export default function Dashboard({ user, profile, log }: any) {
   const [zips, setZips] = useState<string[]>([])
   const [zipInput, setZipInput] = useState('')
   const [filter, setFilter] = useState('all')
-    const [subject, setSubject] = useState('All-cash offer — {address}')
+  const [subject, setSubject] = useState('All-cash offer — {address}')
   const [body, setBody] = useState('Hi {agent_name},\n\nI came across the listing at {address} and wanted to reach out with a cash offer inquiry.\n\nThe property has been listed for {dom} days and I\'m prepared to move quickly with a straightforward all-cash offer.\n\nWould you be open to a brief conversation?\n\nBest regards,\n[Your name]\n[Your phone]')
-  const [apifyKey, setApifyKey] = useState(profile?.apify_api_key || '')h
+  const [apifyKey, setApifyKey] = useState(profile?.apify_api_key || '')
   const [saved, setSaved] = useState(false)
   const [preview, setPreview] = useState(false)
   const router = useRouter()
